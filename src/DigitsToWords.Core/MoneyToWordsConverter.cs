@@ -163,6 +163,6 @@ public sealed class MoneyToWordsConverter : IMoneyToWordsConverter
     /// <summary>Returns the scale word for a group of three digits counted from the right, which is empty for group zero and "THOUSAND" for group one.</summary>
     private static string ScaleWord(int groupIndex) => ScaleWords[groupIndex];
 
-    /// <summary>Returns the position of a digit character in the word arrays, so '7' gives 7.</summary>
+    /// <summary>Converts a digit character such as '7' to its number, 7.</summary>
     private static int DigitValue(char digit) => digit - '0';
 }
