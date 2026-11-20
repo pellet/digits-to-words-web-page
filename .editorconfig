@@ -1,0 +1,12 @@
+root = true
+
+# Turn off the ReSharper suggestions that disagree with this project's chosen C# style.
+[*.cs]
+# Explicit types such as int and string are written out rather than replaced with var.
+resharper_suggest_var_or_type_built_in_types_highlighting = none
+resharper_suggest_var_or_type_simple_types_highlighting = none
+# Multi-line lists keep a comma after their last item.
+resharper_arrange_trailing_comma_in_multiline_lists_highlighting = none
+# If statements are kept as written rather than turned into switch statements or inverted.
+resharper_convert_if_statement_to_switch_statement_highlighting = none
+resharper_invert_if_highlighting = none
