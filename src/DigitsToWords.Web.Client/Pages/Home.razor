@@ -1,0 +1,80 @@
+﻿@page "/"
+@rendermode @(new InteractiveWebAssemblyRenderMode(prerender: false))
+@using DigitsToWords.Core
+@using DigitsToWords.Web.Client.Services
+@inject IMoneyValidator Validator
+@inject IConversionApiClient ApiClient
+
+<PageTitle>Digits to words</PageTitle>
+
+<h1>Digits to words</h1>
+
+<form class="convert-form" @onsubmit="ConvertAsync" novalidate>
+    <label for="amount-input" class="form-label">Amount in dollars</label>
+    <div class="convert-row">
+        <input id="amount-input"
+               data-testid="amount-input"
+               class="form-control"
+               type="text"
+               inputmode="decimal"
+               autocomplete="off"
+               aria-describedby="amount-hint error-message"
+               aria-invalid="@(errorMessage is null ? null : "true")"
+               @bind="amount"
+               @bind:event="oninput" />
+        <button id="convert-button" data-testid="convert-button" type="submit" class="btn btn-primary" disabled="@isConverting">
+            Convert
+        </button>
+    </div>
+    <div id="amount-hint" class="form-text">For example 123.45. Use digits only, with up to two decimal places.</div>
+</form>
+
+<div id="error-message" data-testid="error-message" class="convert-error" aria-live="assertive">@errorMessage</div>
+<div id="result" data-testid="result" class="convert-result" aria-live="polite">@words</div>
+
+@code {
+    /// <summary>The message shown when the server cannot be reached or gives an unexpected reply.</summary>
+    public const string ApiFailureMessage = "Sorry, the amount could not be converted right now. Please try again in a moment.";
+
+    private string? amount;
+    private string? errorMessage;
+    private string? words;
+    private bool isConverting;
+
+    private async Task ConvertAsync()
+    {
+        if (isConverting)
+        {
+            return;
+        }
+
+        errorMessage = null;
+        words = null;
+
+        var validation = Validator.Validate(amount);
+        if (!validation.IsValid)
+        {
+            errorMessage = validation.ErrorMessage ?? "Please enter a valid amount.";
+            return;
+        }
+
+        isConverting = true;
+        try
+        {
+            words = await ApiClient.ConvertAsync(validation.NormalisedValue ?? amount!);
+        }
+        catch (ConversionRejectedException rejected)
+        {
+            errorMessage = rejected.Message;
+        }
+        catch (Exception)
+        {
+            // Any other failure is shown as a friendly message rather than crashing the page.
+            errorMessage = ApiFailureMessage;
+        }
+        finally
+        {
+            isConverting = false;
+        }
+    }
+}

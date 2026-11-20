@@ -1,0 +1,21 @@
+.convert-form {
+    max-width: 40rem;
+}
+
+.convert-row {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.convert-error {
+    margin-top: 1rem;
+    color: #b00020;
+    font-weight: 600;
+}
+
+.convert-result {
+    margin-top: 1rem;
+    font-size: 1.25rem;
+    font-weight: 600;
+    overflow-wrap: anywhere;
+}
