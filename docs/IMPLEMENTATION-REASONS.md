@@ -12,9 +12,10 @@ Use of AI
 
 - I also created a skill to make it easy for someone to interact with the final product, which I used myself to do some freestyle testing.
 
-## 2. Why .NET 8 and Blazor
+## 2. Why .NET 10 and Blazor
 
-I went with .NET since c# was preferred, .NET 8 is relatively modern and stable and production ready, I also have experience using it already.
+- I went with .NET since c# was preferred.
+- I originally did not specify the version of .NET and Claude chose .NET 8 which is relatively modern, stable and production ready, I also have experience using it already.  After basically completing the project I found out that it was no longer receiving security patches since the 10th of November, so decided to upgrade the project to .NET 10(the latest LTS version) so it could be easily updated with security patches.
 I went with Blazor instead of React so all code and the tests could be written using c#/xunit(rather than JS) on both backend and frontend.  Other option was to go with React but it doesn't share the tooling as much so would make the solution more complex.
 
 ## 3. Project structure and separation of concerns
