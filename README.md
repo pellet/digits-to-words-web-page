@@ -71,9 +71,7 @@ These examples are the actual output of the running site:
 | `-0.45` | MINUS FORTY-FIVE CENTS |
 | `12.505` | (refused) The amount can have at most two decimal places. |
 
-One wording choice is still waiting for the owner's decision, so the behaviour below is what the code does today and not final policy:
-
-- The word "AND" appears before a last group of fewer than one hundred (`1005` is `ONE THOUSAND AND FIVE DOLLARS`), but not between larger groups, so `1005000` reads `ONE MILLION FIVE THOUSAND DOLLARS`.
+The word "AND" appears before a last group of fewer than one hundred (`1005` is `ONE THOUSAND AND FIVE DOLLARS`), but not between larger groups, so `1005000` reads `ONE MILLION FIVE THOUSAND DOLLARS`.
 
 ## Run the tests
 
