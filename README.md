@@ -63,16 +63,16 @@ These examples are the actual output of the running site:
 | Input | Output |
 | --- | --- |
 | `123.45` | ONE HUNDRED AND TWENTY-THREE DOLLARS AND FORTY-FIVE CENTS |
-| `0.45` | ZERO DOLLARS AND FORTY-FIVE CENTS |
+| `0.45` | FORTY-FIVE CENTS |
 | `1.01` | ONE DOLLAR AND ONE CENT |
 | `12.5` | TWELVE DOLLARS AND FIFTY CENTS |
 | `1005` | ONE THOUSAND AND FIVE DOLLARS |
 | `-5` | MINUS FIVE DOLLARS |
+| `-0.45` | MINUS FORTY-FIVE CENTS |
 | `12.505` | (refused) The amount can have at most two decimal places. |
 
-Two wording choices are still waiting for the owner's decision, so the behaviour below is what the code does today and not final policy:
+One wording choice is still waiting for the owner's decision, so the behaviour below is what the code does today and not final policy:
 
-- A negative amount under one dollar reads like `-0.45` becoming `MINUS ZERO DOLLARS AND FORTY-FIVE CENTS`.
 - The word "AND" appears before a last group of fewer than one hundred (`1005` is `ONE THOUSAND AND FIVE DOLLARS`), but not between larger groups, so `1005000` reads `ONE MILLION FIVE THOUSAND DOLLARS`.
 
 ## Run the tests
@@ -115,11 +115,11 @@ The end-to-end test is marked with the trait `Category=E2E`. Running `dotnet tes
 Valid conversions (Core):
 
 - The example from the original request, zero, `0.00`, and values with leading zeros.
-- Singular `ONE DOLLAR` and `ONE CENT` against plural forms, cents only (`0.45`), one decimal place (`12.5` is fifty cents), and no cents part when the cents are zero.
+- Singular `ONE DOLLAR` and `ONE CENT` against plural forms, amounts under one dollar written as cents only (`0.45` is `FORTY-FIVE CENTS`), one decimal place (`12.5` is fifty cents), and no cents part when the cents are zero.
 - Every single digit, `10` to `19`, every exact ten, hyphenated tens and units, and hundreds with and without "AND".
 - "AND" before a last group under one hundred, and no "AND" between larger groups.
 - Every scale word from THOUSAND to DECILLION, including tens and hundreds of each, and one amount that uses them all in order.
-- Negative amounts starting with `MINUS`, and `-0` and `-0.00` written as plain zero.
+- Negative amounts starting with `MINUS` (`-0.45` is `MINUS FORTY-FIVE CENTS`), and `-0` and `-0.00` written as plain zero.
 - Whitespace around the amount is ignored.
 
 Boundaries (Core):

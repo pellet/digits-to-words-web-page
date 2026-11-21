@@ -32,7 +32,7 @@ public class MoneyToWordsConverterTests
     [Theory]
     [InlineData("1", "ONE DOLLAR")]
     [InlineData("1.00", "ONE DOLLAR")]
-    [InlineData("0.01", "ZERO DOLLARS AND ONE CENT")]
+    [InlineData("0.01", "ONE CENT")]
     [InlineData("1.01", "ONE DOLLAR AND ONE CENT")]
     [InlineData("1.02", "ONE DOLLAR AND TWO CENTS")]
     [InlineData("2.01", "TWO DOLLARS AND ONE CENT")]
@@ -45,13 +45,13 @@ public class MoneyToWordsConverterTests
     }
 
     [Theory]
-    [InlineData("0.45", "ZERO DOLLARS AND FORTY-FIVE CENTS")]
-    [InlineData("0.02", "ZERO DOLLARS AND TWO CENTS")]
-    [InlineData("0.10", "ZERO DOLLARS AND TEN CENTS")]
-    [InlineData("0.11", "ZERO DOLLARS AND ELEVEN CENTS")]
-    [InlineData("0.99", "ZERO DOLLARS AND NINETY-NINE CENTS")]
-    [InlineData("00.45", "ZERO DOLLARS AND FORTY-FIVE CENTS")]
-    public void Convert_writes_zero_dollars_before_an_amount_of_cents_only(string amount, string expected)
+    [InlineData("0.45", "FORTY-FIVE CENTS")]
+    [InlineData("0.02", "TWO CENTS")]
+    [InlineData("0.10", "TEN CENTS")]
+    [InlineData("0.11", "ELEVEN CENTS")]
+    [InlineData("0.99", "NINETY-NINE CENTS")]
+    [InlineData("00.45", "FORTY-FIVE CENTS")]
+    public void Convert_writes_an_amount_under_one_dollar_as_cents_only(string amount, string expected)
     {
         Assert.Equal(expected, _converter.Convert(amount));
     }
@@ -60,8 +60,8 @@ public class MoneyToWordsConverterTests
     [InlineData("12.5", "TWELVE DOLLARS AND FIFTY CENTS")]
     [InlineData("12.50", "TWELVE DOLLARS AND FIFTY CENTS")]
     [InlineData("12.05", "TWELVE DOLLARS AND FIVE CENTS")]
-    [InlineData("0.1", "ZERO DOLLARS AND TEN CENTS")]
-    [InlineData("0.9", "ZERO DOLLARS AND NINETY CENTS")]
+    [InlineData("0.1", "TEN CENTS")]
+    [InlineData("0.9", "NINETY CENTS")]
     public void Convert_reads_one_decimal_place_as_tens_of_cents(string amount, string expected)
     {
         Assert.Equal(expected, _converter.Convert(amount));
@@ -294,8 +294,8 @@ public class MoneyToWordsConverterTests
     [InlineData("-5", "MINUS FIVE DOLLARS")]
     [InlineData("-1", "MINUS ONE DOLLAR")]
     [InlineData("-123.45", "MINUS ONE HUNDRED AND TWENTY-THREE DOLLARS AND FORTY-FIVE CENTS")]
-    [InlineData("-0.45", "MINUS ZERO DOLLARS AND FORTY-FIVE CENTS")]
-    [InlineData("-0.01", "MINUS ZERO DOLLARS AND ONE CENT")]
+    [InlineData("-0.45", "MINUS FORTY-FIVE CENTS")]
+    [InlineData("-0.01", "MINUS ONE CENT")]
     [InlineData("-1005", "MINUS ONE THOUSAND AND FIVE DOLLARS")]
     public void Convert_starts_negative_amounts_with_minus(string amount, string expected)
     {

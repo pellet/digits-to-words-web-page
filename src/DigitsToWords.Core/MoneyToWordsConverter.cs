@@ -55,12 +55,21 @@ public sealed class MoneyToWordsConverter : IMoneyToWordsConverter
             words.Add("MINUS");
         }
 
-        words.AddRange(WholeNumberWords(dollarDigits));
-        words.Add(dollarDigits == "1" ? "DOLLAR" : "DOLLARS");
+        // An amount under one dollar reads as cents only, so "0.45" gives "FORTY-FIVE CENTS"; zero itself is still "ZERO DOLLARS".
+        bool showDollars = !(dollarDigits == "0" && centDigits != "00");
+        if (showDollars)
+        {
+            words.AddRange(WholeNumberWords(dollarDigits));
+            words.Add(dollarDigits == "1" ? "DOLLAR" : "DOLLARS");
+        }
 
         if (centDigits != "00")
         {
-            words.Add("AND");
+            if (showDollars)
+            {
+                words.Add("AND");
+            }
+
             words.Add(WordsBelowOneHundred(centDigits[0], centDigits[1]));
             words.Add(centDigits == "01" ? "CENT" : "CENTS");
         }

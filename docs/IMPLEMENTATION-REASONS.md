@@ -50,7 +50,7 @@ The brief left some points open. For each default below, say why you accepted it
 
   _Your answer here._
 
-- **"ZERO DOLLARS"** for zero ("0" gives "ZERO DOLLARS", and "0.45" gives "ZERO DOLLARS AND FORTY-FIVE CENTS").
+- **"ZERO DOLLARS" only for zero itself** ("0" gives "ZERO DOLLARS", while "0.45" gives just "FORTY-FIVE CENTS" and "-0.45" gives "MINUS FORTY-FIVE CENTS").
 
   _Your answer here._
 
