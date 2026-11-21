@@ -27,11 +27,11 @@ else
 
 app.UseHttpsRedirection();
 
-app.UseStaticFiles();
 app.UseAntiforgery();
 
 app.MapConvertEndpoint();
 
+app.MapStaticAssets();
 app.MapRazorComponents<App>()
     .AddInteractiveWebAssemblyRenderMode()
     .AddAdditionalAssemblies(typeof(DigitsToWords.Web.Client._Imports).Assembly);

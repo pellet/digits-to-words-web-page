@@ -2,11 +2,11 @@
 
 This is a small website that turns a dollar amount written in digits into words. For example, `123.45` becomes `ONE HUNDRED AND TWENTY-THREE DOLLARS AND FORTY-FIVE CENTS`.
 
-The site is built with .NET 8 and Blazor. The page runs in the browser as WebAssembly and sends the amount to an API on the server, which checks it again and does the conversion. The conversion code is written by hand and uses no number-to-words library. The author's reasons for the main design choices are in [docs/IMPLEMENTATION-REASONS.md](docs/IMPLEMENTATION-REASONS.md).
+The site is built with .NET 10 and Blazor. The page runs in the browser as WebAssembly and sends the amount to an API on the server, which checks it again and does the conversion. The conversion code is written by hand and uses no number-to-words library. The author's reasons for the main design choices are in [docs/IMPLEMENTATION-REASONS.md](docs/IMPLEMENTATION-REASONS.md).
 
 ## Prerequisites
 
-- The .NET 8 SDK (version 8.0 or later in the 8.x line). Check it with `dotnet --version`.
+- The .NET 10 SDK (version 10.0.100 or later in the 10.x line). The `global.json` file at the root of the repository tells the `dotnet` command to use it. Check it with `dotnet --version`.
 - PowerShell (`pwsh`), which is needed only to install the browser used by the end-to-end test.
 
 ## Build
@@ -87,7 +87,7 @@ To run the end-to-end test on its own, first build it and install the Chromium b
 
 ```
 dotnet build tests/DigitsToWords.E2E
-pwsh tests/DigitsToWords.E2E/bin/Debug/net8.0/playwright.ps1 install chromium
+pwsh tests/DigitsToWords.E2E/bin/Debug/net10.0/playwright.ps1 install chromium
 ```
 
 Then run it:
@@ -154,6 +154,12 @@ End-to-end happy path (E2E):
 
 ### How this supports production readiness
 
+The site runs on .NET 10, which Microsoft supports with security fixes, and a dependency scan found no NuGet packages with known vulnerabilities in any project. Repeat the scan before each release with this command:
+
+```
+dotnet list DigitsToWords.sln package --vulnerable --include-transitive
+```
+
 The conversion rules, which are the part most likely to be wrong in a way users notice, are tested across every word, every boundary and every rejection rule. The server validates every request itself, and the API tests show it refuses bad input with a clear message whatever the page does. The page tests show that users see an error or a friendly failure message instead of a broken screen. The end-to-end test shows the pieces are wired together: the WebAssembly page loads, calls the real API and shows the result. Together they give good confidence that the site does what it says for normal use. They do not, on their own, prove it is ready for heavy or hostile public traffic, as the list below shows.
 
 ### Not yet covered
@@ -161,7 +167,7 @@ The conversion rules, which are the part most likely to be wrong in a way users 
 - Load, stress and soak testing. Nothing measures how the site behaves under many users or very large request volumes.
 - Cross-browser and mobile testing. The end-to-end test runs only in Chromium.
 - An accessibility audit. The page uses a label and live regions, but it has not been checked with a tool or a screen reader.
-- Security scanning, such as a dependency vulnerability scan, a penetration test, and a review of rate limiting, request size limits and security headers.
+- Deeper security testing, such as a penetration test, and a review of rate limiting, request size limits and security headers.
 - Only one end-to-end test exists, so error messages and other cases are not checked in a real browser.
 - Tests of the published Release build, of HTTPS behind a reverse proxy, and of monitoring and logging.
 - Tests of slow or lost network connections, and of the WebAssembly download size and start-up time.
