@@ -1,11 +1,16 @@
-# Implementation reasons
+# Implementation reasons (All manually typed/no AI help beyond original template for this file)
 
 ## 1. Overview of the approach
 
-- In a few sentences, how does the solution work from the moment a number is typed to the moment the words are shown?
-- What was the guiding idea behind the design?
+Take a look at the 'initial-prompt.md' file to see the high level of my approach/design.
 
-_Your answer here._
+Use of AI
+- I went with an agent orchestration technique I am now using which gives a good result fast whilst being efficient with tokens, this can be seen in the transcript.  
+- It took roughly 45 minutes which included testing - it could have been quicker if I dropped the loop poll lower than 15 minutes and/or told it to kick off each task ASAP without waiting for the loop. 
+- Fable high effort was used for transforming my original prompt shown in initial-prompt.md.  I've checked in the 'schedule-deferred-tasks' skill and agents used by claude into this repo.  
+- It used a mix of models/efforts, the models it ended up using for the subagents were Fable, Opus and Sonnet.
+
+- I also created a skill to make it easy for someone to interact with the final product, which I used myself to do some freestyle testing.
 
 ## 2. Why .NET 8 and Blazor
 
@@ -21,79 +26,18 @@ The solution is broken into three projects/components.
 
 ## 4. The conversion algorithm
 
-- Why does the algorithm work on the number as a string and use each digit's position counted from the right, instead of parsing it into a numeric type?
-- Why did you write it yourself with no libraries or NuGet packages?
-- How are the scale words (THOUSAND, MILLION and so on) and the word "AND" handled?
-
-_Your answer here._
+- Since I had to come up with my own opinionated design of the algorithmn, I thought about how the numbers would map to english words. I decided to use the decimal point and/or last index of the number as an anchor.
+- I went with using a string so it was easy for parsing the number by its index, it also made the specification more specific so Claude could follow my direction, the code would also be more readable than using bitwise operations on number types and have less concern about the upper and lower limit of the number to support.
+- I decided to only support under undecillion dollars, since I thought this amount was reasonable when talking about dollars and cents, and it was not straight forward for me on how to support words dynamically so that there would be no upper limit.
+- I went over the final implementation by reading it and then running some tests with the debugger to step through the algorithmn and understand exactly how the conditional logic worked.
 
 ## 5. Validation rules and where validation happens
 
-- Which rules does the validator enforce, and why those?
-- Why is validation done in both the browser (client) and the API (server)?
-
-_Your answer here._
-
-## 6. Interpretation decisions on ambiguous requirements
-
-The brief left some points open. For each default below, say why you accepted it or what you would change.
-
-- **At most two decimal places** ("12.5" and "12.50" are valid, "12.505" is not; "12." and ".5" are rejected).
-
-  _Your answer here._
-
-- **Singular DOLLAR and CENT** ("ONE DOLLAR", "ONE CENT").
-
-  _Your answer here._
-
-- **"MINUS" prefix for negative values** ("-5" gives "MINUS FIVE DOLLARS", while "-0" gives "ZERO DOLLARS").
-
-  _Your answer here._
-
-- **"ZERO DOLLARS" only for zero itself** ("0" gives "ZERO DOLLARS", while "0.45" gives just "FORTY-FIVE CENTS" and "-0.45" gives "MINUS FORTY-FIVE CENTS").
-
-  _Your answer here._
-
-- **Placement of "AND"** (after the hundreds, and before a final group under one hundred when larger groups come first).
-
-  _Your answer here._
-
-- **No cents part when the cents are zero** ("12.00" gives "TWELVE DOLLARS").
-
-  _Your answer here._
-
-- **Rejecting commas and the "$" sign** in the input.
-
-  _Your answer here._
-
-- **Upper limit** (values must be below one undecillion).
-
-  _Your answer here._
+- I wanted some basic helpful validation to be put on the frontend so the user would have an idea of what input was supported and could modify the input to get a result.
+- The backend also has some validation but leaves the user readable errors to the front end to not duplicate logic or load the server.
 
 ## 7. Testing strategy
 
-- Why these tools: xUnit for the logic, bUnit for the page, WebApplicationFactory for the API, and Playwright for the end-to-end check?
-- Why keep the end-to-end test minimal, and why are the tests run locally only rather than on GitHub?
-
-_Your answer here._
-
-## 8. Alternatives considered and rejected
-
-- Which other approaches did you consider (for example a number-to-words library, Blazor Server, or parsing into a numeric type)?
-- Why did you reject each one?
-
-_Your answer here._
-
-## 9. Known limitations and future improvements
-
-- What does the solution not do, or not do well?
-- What would you add or change with more time?
-
-_Your answer here._
-
-## 10. Time spent and trade-offs
-
-- How long did you spend, and where did the time go?
-- What did you trade away to finish in that time?
-
-_Your answer here._
+- I went with xunit as much as possible since I have a lot of experience using it.
+- A 'pyramid' like structure of tests was made with the projects with least dependencies and quickest to test having the most tests and projects with the most dependencies and slowest to run having the fewest.
+- I tried to cover the core business logic since this could change and not be obvious to a developer/LLM even though it had essentially broken the site's behaviour.
